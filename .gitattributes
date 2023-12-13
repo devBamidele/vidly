@@ -1,0 +1,5 @@
+# Set the default behavior to normalize line endings
+* text=auto
+
+# Explicitly declare files that will always have LF line endings on checkout.
+*.js text eol=lf
