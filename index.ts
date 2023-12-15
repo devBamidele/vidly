@@ -2,61 +2,35 @@ import express, { Request, Response } from 'express';
 import { getMovieGenres, movieGenreList, MovieGenre } from './movies';
 import { validateGenreInput, validateGenreAdd, validateGenreUpdate } from './validation';
 
+import helmet from 'helmet';
+// import Debug from 'debug';
+// import morgan from 'morgan';
+// import config from 'config';
+
+// const startupDebugger = Debug('app:startup');
+// const dbDebugger = Debug('app:db');
+
 const app = express();
 const port = 3000;
 
 const baseUrl = '/api/genres';
 
+app.set('view engine', 'pug');
+
 app.use(express.json());
+app.use(express.urlencoded({extended : true}));
+app.use(express.static('public'));
+app.use(helmet());
 
-app.get(baseUrl, (req: Request, res: Response) => res.send(getMovieGenres()));
+/*
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server ' + config.get('mail.host'));
+console.log('Mail Password ' + config.get('mail.password'));
 
-app.get(`${baseUrl}/:genre`, validateGenreInput, (req: Request, res: Response) => {
-
-    const genreKey = req.params.genre.toLocaleLowerCase() as MovieGenre;
-
-    const moviesForGenre = movieGenreList[genreKey];
-
-    res.send(moviesForGenre);
-    
-});
-
-app.post(`${baseUrl}/add`, validateGenreAdd, (req: Request, res : Response) => {
-
-    const newGenreKey = req.body.genre?.toLocaleLowerCase();
-  
-    movieGenreList[newGenreKey] = [];
-
-    res.send(movieGenreList);
-
-});
-
-app.put(`${baseUrl}/:genre`, validateGenreUpdate, (req: Request, res : Response) => {
-
-    const updatedGenreKey : string | undefined = req.body.updatedGenre?.toLocaleLowerCase();
-
-    const oldGenreKey = req.params.genre;
-
-    if(updatedGenreKey != null){
-
-        movieGenreList[updatedGenreKey] = movieGenreList[oldGenreKey];
-
-        delete movieGenreList[oldGenreKey];
-
-        res.status(200).send(`Genre updated from ${oldGenreKey} to ${updatedGenreKey} successfully`);
-    }
-
-    res.send('Update complete');
-
-});
-
-app.delete(`${baseUrl}/:genre`, validateGenreInput, (req: Request, res: Response) => {
-    const genreKey = req.params.genre.toLocaleLowerCase() as MovieGenre;
-
-    delete movieGenreList[genreKey];
-
-    res.status(200).send(getMovieGenres());
-});
-
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled ...')
+}
+*/
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));

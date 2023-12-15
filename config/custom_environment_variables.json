@@ -1,0 +1,7 @@
+{
+    "mail" : {
+        "password" : "app_password"  ,
+        "rest" : "some_value"
+    }
+}
+
